@@ -33,7 +33,7 @@ slick java rate limiting with spring support
     // IP Limiting (will use X-Forwarded-Host, otherwise actual remote address from HttpServletRequest)
     @GetMapping
     @RateLimited(
-        value = IPExtractor.class,
+        key = IPExtractor.class,
         maximumRequests = 2,
         windowSize = 10
     )
@@ -41,8 +41,13 @@ slick java rate limiting with spring support
         return "hello";
     } 
    ```
-   
-### Custom IP Extractor
+
+Available extractors:
+- NoopExtractor: default key extractor, it will not return any key, causing all users to be put in one bucket
+- IPExtractor: will use X-Forwarded-Host, otherwise actual remote address from HttpServletRequest
+- UsernameExtractor: for use with Spring Security, it will extract the username from authentication principal security context (it must be an instance of UserDetails)
+
+### Custom Key Extractor Example
 
 ```java
 // This is actually the key extractor from the library
@@ -61,19 +66,5 @@ public class IPExtractor implements KeyExtractor {
 
         return xForwardedForHeader == null ? httpRequest.getRemoteAddr() : xForwardedForHeader;
     }
-}
-
-// For use with Spring Security
-@Component
-public class UsernameExtractor implements KeyExtractor {
-   public String extract() {
-      Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-      if ((principal instanceof UserDetails appUserPrincipal)) {
-         return appUserPrincipal.getUsername();
-      }
-
-      return "";
-   }
 }
 ```
