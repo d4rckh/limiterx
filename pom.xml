@@ -23,6 +23,33 @@
         </dependency>
     </dependencies>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>d4rckh</id>
+            <name>Andrei Sonea</name>
+            <email>andreiandrei.s2006@gmail.com</email>
+            <url>https://github.com/d4rckh</url>
+            <roles>
+                <role>Developer</role>
+                <role>Maintainer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/d4rckh/limiterx.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:d4rckh/limiterx.git</developerConnection>
+        <url>https://github.com/d4rckh/limiterx</url>
+        <tag>HEAD</tag>
+    </scm>
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
