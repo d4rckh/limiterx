@@ -7,11 +7,15 @@
     <parent>
         <groupId>io.github.d4rckh</groupId>
         <artifactId>limiterx</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
 
     <artifactId>limiterx-core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
+
+    <name>LimiterX Core</name>
+    <description>A flexible and efficient rate-limiting library with Redis and in-memory support.</description>
+    <url>https://github.com/d4rckh/limiterx</url>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>

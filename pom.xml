@@ -6,13 +6,17 @@
 
     <groupId>io.github.d4rckh</groupId>
     <artifactId>limiterx</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>limiterx-core</module>
         <module>limiterx-spring-boot-starter</module>
     </modules>
+
+    <name>LimiterX</name>
+    <description>A flexible and efficient rate-limiting library with Redis and in-memory support.</description>
+    <url>https://github.com/d4rckh/limiterx</url>
 
     <dependencies>
         <dependency>
