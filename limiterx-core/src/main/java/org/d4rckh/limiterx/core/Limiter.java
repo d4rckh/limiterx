@@ -11,7 +11,6 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 public class Limiter {
-
     private final ILimiterStorage storage;
 
     public boolean increaseCounterAndCheckIfLimited(
@@ -40,7 +39,7 @@ public class Limiter {
 
             if (blockedUntil.isAfter(Instant.now())) {
                 storage.updateByKey(rawKey, clientStats);
-                return false;
+                return true;
             }
 
             clientStats.setBlockedAt(null);
@@ -54,11 +53,10 @@ public class Limiter {
             }
 
             storage.updateByKey(rawKey, clientStats);
-            return false;
+            return true;
         }
 
         storage.updateByKey(rawKey, clientStats);
-        return true;
+        return false;
     }
-
 }

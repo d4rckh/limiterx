@@ -2,6 +2,10 @@ D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\lim
 D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\aspect\RateLimitedAspect.java
 D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\config\RedisTemplateConfig.java
 D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\annotation\EnableLimiterX.java
+D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\extractor\UsernameExtractor.java
+D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\extractor\KeyExtractor.java
 D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\RedisStorage.java
+D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\extractor\NoopExtractor.java
 D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\annotation\RateLimited.java
+D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\extractor\IPExtractor.java
 D:\liceulmeu2\limiterx\limiterx-spring-boot-starter\src\main\java\org\d4rckh\limiterx\spring\exception\LimiterXTooManyRequests.java

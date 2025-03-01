@@ -12,7 +12,9 @@ public class Key {
         return new Key(key);
     }
 
-    public static Key fromClass(final Class<?> clazz, final String key) {
-        return new Key(clazz.getName() + key);
+    public static Key fromClass(final Class<?> clazz, final String signature, final String key) {
+        return new Key(
+            String.format("LimiterX(%s#%s#%s)", clazz.getName(), signature, key)
+        );
     }
 }

@@ -30,10 +30,10 @@ slick java rate limiting with spring support
         return "hello";
     } 
     
-    // It's possible to limit per custom keys
+    // IP Limiting (will use X-Forwarded-Host, otherwise actual remote address from HttpServletRequest)
     @GetMapping
     @RateLimited(
-        value = /* language=SpEL */ "authentication.principal.userId",
+        value = IPExtractor.class,
         maximumRequests = 2,
         windowSize = 10
     )
@@ -41,3 +41,39 @@ slick java rate limiting with spring support
         return "hello";
     } 
    ```
+   
+### Custom IP Extractor
+
+```java
+// This is actually the key extractor from the library
+@Component
+public class IPExtractor implements KeyExtractor {
+
+    private final HttpServletRequest httpRequest;
+
+    @Autowired
+    public IPExtractor(ObjectFactory<HttpServletRequest> requestFactory) {
+        this.httpRequest = requestFactory.getObject();
+    }
+
+    public String extract() {
+        String xForwardedForHeader = httpRequest.getHeader("X-Forwarded-For");
+
+        return xForwardedForHeader == null ? httpRequest.getRemoteAddr() : xForwardedForHeader;
+    }
+}
+
+// For use with Spring Security
+@Component
+public class UsernameExtractor implements KeyExtractor {
+   public String extract() {
+      Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+      if ((principal instanceof UserDetails appUserPrincipal)) {
+         return appUserPrincipal.getUsername();
+      }
+
+      return "";
+   }
+}
+```
