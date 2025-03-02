@@ -28,6 +28,8 @@ public class GeneralConfig { }
 
 #### Basic Rate Limiting
 
+> **This will treat all requests as coming from the same client!** To limit by IP scroll below
+
 ```java
 @GetMapping
 @RateLimited(
@@ -93,7 +95,7 @@ String hello() {
 
 - **Limit**: if the key is null, it will limit using the same key all requests
 - **Forbid**: won't allow function calls if the key is null
-- **Auto**: will use limit if key is NoopExtractor, otherwise `Forbid`
+- **Auto**: will use `Limit` if key is NoopExtractor, otherwise `Forbid`
 
 ## Storage Configuration
 

@@ -34,10 +34,12 @@ public class RateLimitedAspect {
             key = context.getBean(annotation.fallbackKey()).extract();
         }
 
-        if (nullKeyStrategy.equals(NullKeyStrategy.AUTO) && annotation.key() == NoopExtractor.class && annotation.fallbackKey() == NoopExtractor.class) {
-            nullKeyStrategy = NullKeyStrategy.LIMIT;
-        } else {
-            nullKeyStrategy = NullKeyStrategy.FORBID;
+        if (nullKeyStrategy.equals(NullKeyStrategy.AUTO)) {
+            if (annotation.key() == NoopExtractor.class && annotation.fallbackKey() == NoopExtractor.class) {
+                nullKeyStrategy = NullKeyStrategy.LIMIT;
+            } else {
+                nullKeyStrategy = NullKeyStrategy.FORBID;
+            }
         }
 
         if (key == null && nullKeyStrategy.equals(NullKeyStrategy.FORBID)) {
