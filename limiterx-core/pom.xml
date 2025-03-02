@@ -7,11 +7,11 @@
     <parent>
         <groupId>io.github.d4rckh</groupId>
         <artifactId>limiterx</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.3</version>
     </parent>
 
     <artifactId>limiterx-core</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.3</version>
 
     <name>LimiterX Core</name>
     <description>A flexible and efficient rate-limiting library with Redis and in-memory support.</description>

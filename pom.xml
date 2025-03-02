@@ -6,7 +6,7 @@
 
     <groupId>io.github.d4rckh</groupId>
     <artifactId>limiterx</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.3</version>
     <packaging>pom</packaging>
 
     <modules>

@@ -1,5 +1,0 @@
-org\d4rckh\limiterx\core\common\Key.class
-org\d4rckh\limiterx\core\common\ILimiterStorage.class
-org\d4rckh\limiterx\core\storage\InMemoryStorage.class
-org\d4rckh\limiterx\core\domain\ClientStats.class
-org\d4rckh\limiterx\core\Limiter.class
