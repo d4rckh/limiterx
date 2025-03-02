@@ -10,7 +10,7 @@ LimiterX is a Java rate limiter that supports fixed window and sliding window st
 <dependency>
     <groupId>io.d4rckh</groupId>
     <artifactId>limiterx-spring-boot-starter</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 
