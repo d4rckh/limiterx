@@ -10,7 +10,7 @@ LimiterX is a Java rate limiter that supports fixed window and sliding window st
 <dependency>
     <groupId>io.d4rckh</groupId>
     <artifactId>limiterx-spring-boot-starter</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -28,6 +28,8 @@ public class GeneralConfig { }
 
 #### Basic Rate Limiting
 
+> **This will treat all requests as coming from the same client!** To limit by IP scroll below
+
 ```java
 @GetMapping
 @RateLimited(
@@ -37,7 +39,7 @@ public class GeneralConfig { }
 )
 public String hello() {
     return "hello";
-} 
+}
 ```
 
 #### IP-Based Limiting
@@ -56,11 +58,44 @@ public String hello() {
 } 
 ```
 
+#### Username Limiting
+
+```java
+// Will use the UserDetails principal to get the Username, will throw an error if the user is not authenticated
+@GetMapping
+@RateLimited(
+        key = UsernameExtractor.class,
+        maximumRequests = 2,
+        windowSize = 10
+)
+String hello() {
+   return "hello";
+}
+
+// Username Limiting but will use the same key for unauthenticated function calls (won't throw any errors if the key is null)
+@GetMapping
+@RateLimited(
+        key = UsernameExtractor.class,
+        maximumRequests = 2,
+        windowSize = 10,
+        nullKeyStrategy = NullKeyStrategy.LIMIT
+)
+String hello() {
+   return "hello";
+}
+```
+
 ## Available Key Extractors
 
 - **NoopExtractor**: Default extractor; does not return a key, placing all users in a single bucket.
 - **IPExtractor**: Uses `X-Forwarded-For` if available; otherwise, retrieves the remote address from `HttpServletRequest`.
 - **UsernameExtractor**: For use with Spring Security; extracts the username from the authentication principal (must be an instance of `UserDetails`).
+
+## Null Key Strategies
+
+- **Limit**: if the key is null, it will limit using the same key all requests
+- **Forbid**: won't allow function calls if the key is null
+- **Auto**: will use `Limit` if key is NoopExtractor, otherwise `Forbid`
 
 ## Storage Configuration
 
@@ -101,4 +136,3 @@ LimiterX is open-source and available under the MIT License.
 ---
 
 Enjoy rate limiting with LimiterX!
-
