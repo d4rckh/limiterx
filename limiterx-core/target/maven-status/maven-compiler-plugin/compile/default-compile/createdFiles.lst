@@ -1,5 +1,5 @@
-org\d4rckh\limiterx\core\common\Key.class
-org\d4rckh\limiterx\core\common\ILimiterStorage.class
-org\d4rckh\limiterx\core\storage\InMemoryStorage.class
-org\d4rckh\limiterx\core\domain\ClientStats.class
-org\d4rckh\limiterx\core\Limiter.class
+io\github\d4rckh\limiterx\core\domain\ClientStats.class
+io\github\d4rckh\limiterx\core\domain\Key.class
+io\github\d4rckh\limiterx\core\storage\InMemoryLimiterStorage.class
+io\github\d4rckh\limiterx\core\Limiter.class
+io\github\d4rckh\limiterx\core\common\LimiterStorage.class
