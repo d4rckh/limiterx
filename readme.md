@@ -1,14 +1,16 @@
 # LimiterX
 
-LimiterX is a Java rate limiter that supports fixed window and sliding window strategies. It provides a Spring Boot starter with intuitive annotations for effortless configuration.
+LimiterX is a powerful yet simple rate-limiting library for Java and Spring Boot. It supports both **fixed window** and **sliding window** strategies and comes with a Spring Boot starter for easy integration.
 
-## Getting Started with the Spring Boot Starter
+## Getting Started
 
-### 1. Add the Dependency
+### 1. Add LimiterX to Your Project
+
+Include the dependency in your `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>io.d4rckh</groupId>
+    <groupId>io.github.d4rckh</groupId>
     <artifactId>limiterx-spring-boot-starter</artifactId>
     <version>0.0.3</version>
 </dependency>
@@ -16,35 +18,35 @@ LimiterX is a Java rate limiter that supports fixed window and sliding window st
 
 ### 2. Enable LimiterX
 
-Annotate any `@Configuration` class to enable LimiterX:
+Simply annotate any `@Configuration` class:
 
 ```java
 @Configuration
 @EnableLimiterX
-public class GeneralConfig { }
+public class AppConfig { }
 ```
 
-### 3. Start Limiting Methods!
+### 3. Apply Rate Limits
 
 #### Basic Rate Limiting
 
-> **This will treat all requests as coming from the same client!** To limit by IP scroll below
+Limits access to a method for **all requests**, regardless of the client:
 
 ```java
 @GetMapping
 @RateLimited(
     maximumRequests = 2,
     windowSize = 10, // seconds
-    blockFor = 1000 // seconds; optional blockFor parameter
+    blockFor = 1000 // optional: block duration in seconds
 )
 public String hello() {
-    return "hello";
+    return "Hello!";
 }
 ```
 
-#### IP-Based Limiting
+#### Limit by IP Address
 
-LimiterX can extract the IP from `X-Forwarded-For` or use the actual remote address:
+Uses `X-Forwarded-For` if available; otherwise, falls back to the client's remote address:
 
 ```java
 @GetMapping
@@ -54,62 +56,53 @@ LimiterX can extract the IP from `X-Forwarded-For` or use the actual remote addr
     windowSize = 10
 )
 public String hello() {
-    return "hello";
-} 
+    return "Hello!";
+}
 ```
 
-#### Username Limiting
+#### Limit by Username
+
+Restricts access based on the authenticated user's username (requires Spring Security):
 
 ```java
-// Will use the UserDetails principal to get the Username, will throw an error if the user is not authenticated
 @GetMapping
 @RateLimited(
-        key = UsernameExtractor.class,
-        maximumRequests = 2,
-        windowSize = 10
+    key = UsernameExtractor.class,
+    maximumRequests = 2,
+    windowSize = 10
 )
-String hello() {
-   return "hello";
-}
-
-// Username Limiting but will use the same key for unauthenticated function calls (won't throw any errors if the key is null)
-@GetMapping
-@RateLimited(
-        key = UsernameExtractor.class,
-        maximumRequests = 2,
-        windowSize = 10,
-        nullKeyStrategy = NullKeyStrategy.LIMIT
-)
-String hello() {
-   return "hello";
+public String hello() {
+   return "Hello!";
 }
 ```
 
-## Available Key Extractors
+## Key Extractors
 
-- **NoopExtractor**: Default extractor; does not return a key, placing all users in a single bucket.
-- **IPExtractor**: Uses `X-Forwarded-For` if available; otherwise, retrieves the remote address from `HttpServletRequest`.
-- **UsernameExtractor**: For use with Spring Security; extracts the username from the authentication principal (must be an instance of `UserDetails`).
+Key extractors define how requests are grouped for rate limiting:
 
-## Null Key Strategies
+- **NoopExtractor** *(default)* – No key extraction; all requests share the same limit.
+- **IPExtractor** – Uses the client’s IP address.
+- **UsernameExtractor** – Uses the authenticated username from Spring Security.
 
-- **Limit**: if the key is null, it will limit using the same key all requests
-- **Forbid**: won't allow function calls if the key is null
-- **Auto**: will use `Limit` if key is NoopExtractor, otherwise `Forbid`
+## Handling Null Keys
 
-## Storage Configuration
+When the extracted key is `null`, you can choose how LimiterX handles it:
 
-By default, LimiterX uses **Redis** for storage. To use an in-memory storage backed by a **ConcurrentHashMap**, set the following property:
+- **LIMIT** – Uses a shared key for all such requests.
+- **FORBID** – Blocks requests with `null` keys.
+- **AUTO** – Uses `LIMIT` for `NoopExtractor`, otherwise `FORBID`.
+
+## Storage Options
+
+By default, LimiterX stores rate-limiting data in **Redis**. To switch to in-memory storage, add this property:
 
 ```properties
-limiterx.storage = memory
+limiterx.storage=memory
 ```
 
 ## Creating a Custom Key Extractor
 
-You can implement your own key extractor by creating a class that implements `KeyExtractor`.
-
-### Example: IP-Based Key Extractor
+Need custom rate-limiting logic? Implement `KeyExtractor` in your own class:
 
 ```java
 @Component
@@ -131,8 +124,9 @@ public class IPExtractor implements KeyExtractor {
 
 ## License
 
-LimiterX is open-source and available under the MIT License.
+LimiterX is open-source and licensed under the MIT License.
 
 ---
 
-Enjoy rate limiting with LimiterX!
+Enjoy rate limiting with **LimiterX**! 🚀
+
