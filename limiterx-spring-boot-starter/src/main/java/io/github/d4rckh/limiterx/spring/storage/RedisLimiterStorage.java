@@ -33,7 +33,7 @@ public class RedisLimiterStorage implements LimiterStorage {
     @Override
     public Duration getTtlByKey(String key) {
         return Duration.ofSeconds(
-            Optional.ofNullable(redisTemplate.getExpire(key, TimeUnit.SECONDS)).orElse(0L)
+            Optional.ofNullable(redisTemplate.getExpire(key, TimeUnit.SECONDS)).map(r -> r == -2 ? 0 : r).orElse(0L)
         );
     }
 

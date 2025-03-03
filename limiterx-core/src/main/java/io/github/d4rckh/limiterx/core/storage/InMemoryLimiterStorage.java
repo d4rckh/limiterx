@@ -19,11 +19,6 @@ public class InMemoryLimiterStorage implements LimiterStorage {
     @Override
     public Optional<ClientStats> findByKey(String key) {
         cleanupExpiredKeys();
-        if (isExpired(key)) {
-            storage.remove(key);
-            ttlMap.remove(key);
-            return Optional.empty();
-        }
         return Optional.ofNullable(storage.get(key));
     }
 
@@ -45,14 +40,13 @@ public class InMemoryLimiterStorage implements LimiterStorage {
         ttlMap.put(key, Instant.now().plus(ttl));
     }
 
-    private boolean isExpired(String key) {
-        Instant expiry = ttlMap.get(key);
-        return expiry != null && expiry.isBefore(Instant.now());
-    }
-
     private void cleanupExpiredKeys() {
         Instant now = Instant.now();
-        ttlMap.entrySet().removeIf(entry -> entry.getValue().isBefore(now));
-        storage.entrySet().removeIf(entry -> isExpired(entry.getKey()));
+        ttlMap.forEach((key, expiry) -> {
+            if (expiry.isBefore(now)) {
+                storage.remove(key);
+                ttlMap.remove(key);
+            }
+        });
     }
 }

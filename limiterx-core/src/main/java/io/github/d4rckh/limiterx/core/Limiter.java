@@ -13,7 +13,7 @@ import java.time.Instant;
 public class Limiter {
     private final LimiterStorage storage;
 
-    public boolean increaseCounterAndCheckIfLimited(
+    public boolean performLimiting(
         @NonNull Key key,
         int maximumRequests, int windowSeconds,
         Integer blockFor
@@ -52,6 +52,17 @@ public class Limiter {
         }
 
         return false; // Request is allowed
+    }
+
+    public boolean isClientRateLimited(@NonNull Key key,
+                                       int maximumRequests, int windowSeconds,
+                                       Integer blockFor) {
+        ClientStats cs = storage.findByKey(key.getKey()).orElse(new ClientStats(0, null, Instant.now()));
+
+        resetRequestWindowIfExpired(cs, key.getKey(), windowSeconds);
+
+        return shouldBlockClient(cs, maximumRequests)
+                || isClientBlocked(cs, blockFor);
     }
 
     private void resetRequestWindowIfExpired(ClientStats clientStats, String rawKey, int windowSeconds) {

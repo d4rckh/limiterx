@@ -46,7 +46,7 @@ public class RateLimitedAspect {
             throw new LimiterXMissingKey();
         }
 
-        if (limiter.increaseCounterAndCheckIfLimited(
+        if (limiter.performLimiting(
             Key.fromClass(
                 joinPoint.getTarget().getClass(),
                 joinPoint.getSignature().getName(),
