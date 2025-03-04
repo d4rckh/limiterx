@@ -77,11 +77,11 @@ public class RedisLimiterStorage implements LimiterStorage {
      */
     @Override
     public void setTtlByKey(String key, Duration ttl) {
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {
-            log.info("Setting expiry for key {} to {}s", key, ttl.getSeconds());
+        if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) //{
+//            log.info("Setting expiry for key {} to {}s", key, ttl.getSeconds());
             redisTemplate.expire(key, ttl.getSeconds(), TimeUnit.SECONDS);
-        } else {
-            log.warn("Attempted to set expiry for non-existent key: {}", key);
-        }
+//        } else {
+//            log.warn("Attempted to set expiry for non-existent key: {}", key);
+//        }
     }
 }

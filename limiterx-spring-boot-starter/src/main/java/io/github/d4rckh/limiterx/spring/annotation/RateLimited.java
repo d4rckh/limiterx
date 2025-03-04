@@ -50,6 +50,15 @@ public @interface RateLimited {
     Class<? extends KeyExtractor> key() default NoopExtractor.class;
 
     /**
+     * SPeL expression that will be checked before the key extractors, if it returns
+     * an empty string, the key will be generated using the key and fallbackKey
+     * extractors.
+     *
+     * @return the SPeL expression used
+     */
+    String keyExpression() default "";
+
+    /**
      * The fallback key extractor in case the primary key extractor returns null.
      *
      * @return the fallback key extractor class

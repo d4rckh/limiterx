@@ -7,6 +7,7 @@ import io.github.d4rckh.limiterx.spring.domain.NullKeyStrategy;
 import io.github.d4rckh.limiterx.spring.exception.LimiterXMissingKey;
 import io.github.d4rckh.limiterx.spring.exception.LimiterXTooManyRequests;
 import io.github.d4rckh.limiterx.spring.extractor.NoopExtractor;
+import io.github.d4rckh.limiterx.spring.extractor.evaluator.KeyExtractorSpELEvaluator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -60,6 +61,7 @@ public class RateLimitedAspect {
 
     private final Limiter limiter;
     private final ApplicationContext context;
+    private final KeyExtractorSpELEvaluator evaluator;
 
     /**
      * Intercepts methods annotated with {@link RateLimited} and enforces rate limiting.
@@ -71,13 +73,18 @@ public class RateLimitedAspect {
      */
     @Before("@annotation(annotation)")
     public void rateLimitFunction(JoinPoint joinPoint, RateLimited annotation) {
-        String key = context.getBean(annotation.key()).extract();
-        NullKeyStrategy nullKeyStrategy = annotation.nullKeyStrategy();
+        String key = evaluator.evaluate(annotation.keyExpression());
+
+        if (key.isEmpty()) {
+            key = context.getBean(annotation.key()).extract();
+        }
 
         // Attempt to use fallback key if primary key extraction fails
         if (key == null) {
             key = context.getBean(annotation.fallbackKey()).extract();
         }
+
+        NullKeyStrategy nullKeyStrategy = annotation.nullKeyStrategy();
 
         // Automatically determine null key handling strategy if set to AUTO
         if (nullKeyStrategy.equals(NullKeyStrategy.AUTO)) {
