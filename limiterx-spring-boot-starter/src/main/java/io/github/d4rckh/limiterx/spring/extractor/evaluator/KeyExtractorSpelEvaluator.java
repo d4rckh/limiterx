@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -19,13 +18,13 @@ import java.util.Map;
  * making them accessible within SpEL expressions. Users can specify expressions like:
  * </p>
  * <pre>
- * {@code @RateLimited(keyExpression = "#ipExtractor.extract()")}
+ * {@code @RateLimited(keyExpression = "#IPExtractor.extract()")}
  * </pre>
  * <p>
  * or
  * </p>
  * <pre>
- * {@code @RateLimited(keyExpression = "#headerExtractor.extract('x-myheader')")}
+ * {@code @RateLimited(keyExpression = "#HeaderExtractor.extract('x-myheader')")}
  * </pre>
  * <p>
  * This allows dynamic evaluation of key extraction methods at runtime.
@@ -34,8 +33,7 @@ import java.util.Map;
  * @author d4rckh
  */
 @Slf4j
-@Service
-public class KeyExtractorSpELEvaluator {
+public class KeyExtractorSpelEvaluator {
     private final ExpressionParser parser = new SpelExpressionParser();
     private final StandardEvaluationContext context = new StandardEvaluationContext();
 
@@ -44,8 +42,7 @@ public class KeyExtractorSpELEvaluator {
      *
      * @param applicationContext the Spring application context, used to retrieve {@link KeyExtractor} beans
      */
-    @Autowired
-    public KeyExtractorSpELEvaluator(ApplicationContext applicationContext) {
+    public KeyExtractorSpelEvaluator(ApplicationContext applicationContext) {
         // Retrieve all KeyExtractor beans and register them as SpEL variables
         Map<String, KeyExtractor> extractors = applicationContext.getBeansOfType(KeyExtractor.class);
 
@@ -61,7 +58,7 @@ public class KeyExtractorSpELEvaluator {
      * </pre>
      * or
      * <pre>
-     * {@code String key = evaluator.evaluate("#HeaderExtractor.extract('x-myheaderk')");}
+     * {@code String key = evaluator.evaluate("#HeaderExtractor.extract('x-myheader')");}
      * </pre>
      * </p>
      *
@@ -69,6 +66,8 @@ public class KeyExtractorSpELEvaluator {
      * @return the extracted key as a string, or {@code null} if evaluation fails
      */
     public String evaluate(String expression) {
+        if (expression.isBlank()) return "";
+
         return parser.parseExpression(expression).getValue(context, String.class);
     }
 }

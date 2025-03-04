@@ -37,7 +37,7 @@ public enum NullKeyStrategy {
     /**
      * Automatically determines the strategy:
      * <ul>
-     *     <li>If no extractors are set, defaults to {@link #LIMIT}.</li>
+     *     <li>If no extractors are default or NoopExtractor and key expression is blank, defaults to {@link #LIMIT}.</li>
      *     <li>Otherwise, defaults to {@link #FORBID}.</li>
      * </ul>
      */
