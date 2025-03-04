@@ -5,7 +5,7 @@ package io.github.d4rckh.limiterx.spring.exception;
  * <p>
  * This exception is triggered when a method annotated with {@code @RateLimited}
  * cannot extract a valid key and the configured {@link io.github.d4rckh.limiterx.spring.domain.NullKeyStrategy}
- * is set to {@code FORBID}.
+ * is set to {@code FORBID} or to {@code AUTO} and a key extractor is set.
  * </p>
  *
  * <p>Example scenario:</p>

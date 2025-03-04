@@ -3,6 +3,7 @@ package io.github.d4rckh.limiterx.spring.annotation;
 import io.github.d4rckh.limiterx.spring.common.KeyExtractor;
 import io.github.d4rckh.limiterx.spring.domain.NullKeyStrategy;
 import io.github.d4rckh.limiterx.spring.extractor.NoopExtractor;
+import io.github.d4rckh.limiterx.spring.aspect.RateLimitedAspect;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -27,6 +28,7 @@ import java.lang.annotation.Target;
  *
  * @see KeyExtractor
  * @see NullKeyStrategy
+ * @see RateLimitedAspect
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
