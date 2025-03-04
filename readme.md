@@ -134,7 +134,7 @@ public class IPExtractor implements KeyExtractor {
 
     @Autowired
     public IPExtractor(ObjectFactory<HttpServletRequest> requestFactory) {
-        this.httpRequest = requestFactory;
+        this.requestFactory = requestFactory;
     }
 
     public String extract() {
@@ -150,15 +150,15 @@ public class IPExtractor implements KeyExtractor {
 @Component
 public class MyExtractor implements KeyExtractor {
 
-    private final ObjectFactory<HttpServletRequest> httpServletRequestObjectFactory;
+    private final ObjectFactory<HttpServletRequest> requestFactory;
 
     @Autowired
     public IPExtractor(ObjectFactory<HttpServletRequest> requestFactory) {
-        this.httpRequest = requestFactory;
+        this.requestFactory = requestFactory;
     }
 
     public String extract(String headerName) {
-        return httpServletRequestObjectFactory.getHeader(headerName);
+        return requestFactory.getHeader(headerName);
     }
 }
 
