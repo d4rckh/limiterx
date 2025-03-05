@@ -81,16 +81,10 @@ public @interface RateLimited {
     int maximumRequests();
 
     /**
-     * Strategy for handling cases where both key extractors return a null key.
-     * <p>Can be:</p>
-     * <ul>
-     *     <li>NullKeyStrategy.AUTO: Will apply NullKeyStrategy.LIMIT if key &amp; fallbackKey are default or NoopExtractor.class, otherwise NullKeyStrategy.FORBID</li>
-     *     <li>NullKeyStrategy.LIMIT: In case the key resulted in being null, the request will be assigned an empty key. (Not recommended)</li>
-     *     <li>NullKeyStrategy.FORBID: In case the key resulted in being null, a LimiterXMissingKey exception will be thrown.</li>
-     *     <li>Handling of null or missing keys.</li>
-     * </ul>
+     * Strategy for handling cases where both key extractors return a null key. See NullKeyStrategy for more information
      *
      * @return the null key handling strategy
+     * @see NullKeyStrategy
      */
     NullKeyStrategy nullKeyStrategy() default NullKeyStrategy.AUTO;
 

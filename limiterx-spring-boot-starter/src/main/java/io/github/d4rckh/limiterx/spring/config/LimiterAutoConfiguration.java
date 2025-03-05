@@ -1,5 +1,6 @@
 package io.github.d4rckh.limiterx.spring.config;
 
+import io.github.d4rckh.limiterx.spring.extractor.evaluator.KeyExtractorSpelEvaluator;
 import lombok.extern.slf4j.Slf4j;
 import io.github.d4rckh.limiterx.core.Limiter;
 import io.github.d4rckh.limiterx.core.domain.ClientStats;
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -51,6 +53,17 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class LimiterAutoConfiguration {
 
     /**
+     * Configures a {@link KeyExtractorSpelEvaluator} instance using the application context.
+     *
+     * @param applicationContext the Spring application context
+     * @return a {@link KeyExtractorSpelEvaluator} instance
+     */
+    @Bean
+    public KeyExtractorSpelEvaluator keyExtractorSpelEvaluator(ApplicationContext applicationContext) {
+        return new KeyExtractorSpelEvaluator(applicationContext);
+    }
+
+    /**
      * Configures a {@link Limiter} instance using Redis storage.
      * <p>
      * This bean is created if Redis is available in the classpath and
@@ -64,7 +77,7 @@ public class LimiterAutoConfiguration {
     @ConditionalOnClass(RedisTemplate.class)
     @ConditionalOnProperty(name = "limiterx.storage", havingValue = "redis", matchIfMissing = true)
     public Limiter limiterWithRedis(RedisTemplate<String, ClientStats> redisTemplate) {
-        log.info("Configuring limiter using Redis");
+        log.info("Configuring limiter using Redis storage.");
         return new Limiter(new RedisLimiterStorage(redisTemplate));
     }
 
@@ -81,7 +94,7 @@ public class LimiterAutoConfiguration {
     @ConditionalOnMissingBean(Limiter.class)
     @ConditionalOnProperty(name = "limiterx.storage", havingValue = "memory")
     public Limiter limiterWithInMemory() {
-        log.info("Configuring limiter using in-memory storage");
+        log.info("Configuring limiter using in-memory storage.");
         return new Limiter(new InMemoryLimiterStorage());
     }
 }

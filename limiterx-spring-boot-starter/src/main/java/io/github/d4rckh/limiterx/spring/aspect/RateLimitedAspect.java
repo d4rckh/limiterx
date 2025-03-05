@@ -8,7 +8,6 @@ import io.github.d4rckh.limiterx.spring.exception.LimiterXMissingKey;
 import io.github.d4rckh.limiterx.spring.exception.LimiterXTooManyRequests;
 import io.github.d4rckh.limiterx.spring.extractor.NoopExtractor;
 import io.github.d4rckh.limiterx.spring.extractor.evaluator.KeyExtractorSpelEvaluator;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -56,19 +55,25 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-@RequiredArgsConstructor
 public class RateLimitedAspect {
 
     private final Limiter limiter;
     private final ApplicationContext context;
     private final KeyExtractorSpelEvaluator evaluator;
 
+    public RateLimitedAspect(Limiter limiter, ApplicationContext context, KeyExtractorSpelEvaluator evaluator) {
+        this.limiter = limiter;
+        this.context = context;
+        this.evaluator = evaluator;
+
+    }
+
     /**
      * Intercepts methods annotated with {@link RateLimited} and enforces rate limiting.
      *
      * @param joinPoint  the intercepted method invocation
      * @param annotation the {@code RateLimited} annotation instance
-     * @throws LimiterXMissingKey if both key extractors return null and the null key strategy is {@code FORBID}
+     * @throws LimiterXMissingKey      if both key extractors return null and the null key strategy is {@code FORBID}
      * @throws LimiterXTooManyRequests if the request exceeds the allowed rate limit
      */
     @Before("@annotation(annotation)")
@@ -88,7 +93,7 @@ public class RateLimitedAspect {
 
         // Automatically determine null key handling strategy if set to AUTO
         if (nullKeyStrategy.equals(NullKeyStrategy.AUTO)) {
-            if (annotation.key() == NoopExtractor.class && annotation.fallbackKey() == NoopExtractor.class) {
+            if (annotation.key() == NoopExtractor.class && annotation.fallbackKey() == NoopExtractor.class && annotation.keyExpression().isBlank()) {
                 nullKeyStrategy = NullKeyStrategy.LIMIT;
             } else {
                 nullKeyStrategy = NullKeyStrategy.FORBID;
@@ -102,14 +107,14 @@ public class RateLimitedAspect {
 
         // Perform rate limiting
         if (limiter.performLimiting(
-            Key.fromClass(
-                joinPoint.getTarget().getClass(),
-                joinPoint.getSignature().getName(),
-                key == null ? "" : key
-            ),
-            annotation.maximumRequests(),
-            annotation.windowSize(),
-            annotation.blockFor() == 0 ? null : annotation.blockFor()
+                Key.fromClass(
+                        joinPoint.getTarget().getClass(),
+                        joinPoint.getSignature().getName(),
+                        key == null ? "" : key
+                ),
+                annotation.maximumRequests(),
+                annotation.windowSize(),
+                annotation.blockFor() == 0 ? null : annotation.blockFor()
         )) {
             throw new LimiterXTooManyRequests("Too many requests");
         }

@@ -30,7 +30,7 @@ public class AppConfig { }
 
 #### Basic Rate Limiting
 
-Limits access to a method for **all requests**, regardless of the client:
+> Limits access to a method for **all requests**, regardless of the client:
 
 ```java
 @GetMapping
@@ -46,7 +46,7 @@ public String hello() {
 
 #### Limit by IP Address
 
-Uses `X-Forwarded-For` if available; otherwise, falls back to the client's remote address:
+> Uses `X-Forwarded-For` if available; otherwise, falls back to the client's remote address:
 
 ```java
 @GetMapping
@@ -62,7 +62,7 @@ public String hello() {
 
 #### Limit by Username
 
-Restricts access based on the authenticated user's username (requires Spring Security):
+> Restricts access based on the authenticated user's username (requires Spring Security):
 
 ```java
 @GetMapping
@@ -84,6 +84,26 @@ Key extractors define how requests are grouped for rate limiting:
 - **IPExtractor** – Uses the client’s IP address.
 - **UsernameExtractor** – Uses the authenticated username from Spring Security.
 
+## Key Expressions
+
+Make a key using a Spring expression, only the beans implementing `KeyExtractor` are loaded using their class name.
+
+### Example
+
+> This will combine the UsernameExtractor with the IPExtractor. Warning: if the user is not authenticated, the key will only be formed using the IP
+
+```java
+@GetMapping
+@RateLimited(
+    keyExpression = "{#UsernameExtractor.extract(), #IPExtractor.extract()}",
+    maximumRequests = 2,
+    windowSize = 10
+)
+public String hello() {
+    return "Hello!";
+}
+```
+
 ## Handling Null Keys
 
 When the extracted key is `null`, you can choose how LimiterX handles it:
@@ -104,23 +124,55 @@ limiterx.storage=memory
 
 Need custom rate-limiting logic? Implement `KeyExtractor` in your own class:
 
+> You can use these in the keyExpression parameter!
+
 ```java
 @Component
 public class IPExtractor implements KeyExtractor {
 
-    private final HttpServletRequest httpRequest;
+    private final ObjectFactory<HttpServletRequest> requestFactory;
 
     @Autowired
     public IPExtractor(ObjectFactory<HttpServletRequest> requestFactory) {
-        this.httpRequest = requestFactory.getObject();
+        this.requestFactory = requestFactory;
     }
 
     public String extract() {
-        String xForwardedForHeader = httpRequest.getHeader("X-Forwarded-For");
+        String xForwardedForHeader = requestFactory.getObject().getHeader("X-Forwarded-For");
         return xForwardedForHeader == null ? httpRequest.getRemoteAddr() : xForwardedForHeader;
     }
 }
 ```
+
+## Custom Key Extractor with parameters for use in expressions
+
+```java
+@Component
+public class MyExtractor implements KeyExtractor {
+
+    private final ObjectFactory<HttpServletRequest> requestFactory;
+
+    @Autowired
+    public IPExtractor(ObjectFactory<HttpServletRequest> requestFactory) {
+        this.requestFactory = requestFactory;
+    }
+
+    public String extract(String headerName) {
+        return requestFactory.getHeader(headerName);
+    }
+}
+
+@GetMapping
+@RateLimited(
+    keyExpression = "#MyExtractor.extract('something')",
+    maximumRequests = 2,
+    windowSize = 10
+)
+public String hello() {
+    return "Hello!";
+}
+```
+
 
 ## License
 
