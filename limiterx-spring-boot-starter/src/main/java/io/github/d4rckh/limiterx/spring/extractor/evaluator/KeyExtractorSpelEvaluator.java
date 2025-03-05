@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -35,7 +34,7 @@ import java.util.Map;
  */
 @Slf4j
 @Service
-public class KeyExtractorSpELEvaluator {
+public class KeyExtractorSpelEvaluator {
     private final ExpressionParser parser = new SpelExpressionParser();
     private final StandardEvaluationContext context = new StandardEvaluationContext();
 
@@ -45,7 +44,7 @@ public class KeyExtractorSpELEvaluator {
      * @param applicationContext the Spring application context, used to retrieve {@link KeyExtractor} beans
      */
     @Autowired
-    public KeyExtractorSpELEvaluator(ApplicationContext applicationContext) {
+    public KeyExtractorSpelEvaluator(ApplicationContext applicationContext) {
         // Retrieve all KeyExtractor beans and register them as SpEL variables
         Map<String, KeyExtractor> extractors = applicationContext.getBeansOfType(KeyExtractor.class);
 

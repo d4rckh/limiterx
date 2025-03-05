@@ -7,7 +7,7 @@ import io.github.d4rckh.limiterx.spring.domain.NullKeyStrategy;
 import io.github.d4rckh.limiterx.spring.exception.LimiterXMissingKey;
 import io.github.d4rckh.limiterx.spring.exception.LimiterXTooManyRequests;
 import io.github.d4rckh.limiterx.spring.extractor.NoopExtractor;
-import io.github.d4rckh.limiterx.spring.extractor.evaluator.KeyExtractorSpELEvaluator;
+import io.github.d4rckh.limiterx.spring.extractor.evaluator.KeyExtractorSpelEvaluator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -61,7 +61,7 @@ public class RateLimitedAspect {
 
     private final Limiter limiter;
     private final ApplicationContext context;
-    private final KeyExtractorSpELEvaluator evaluator;
+    private final KeyExtractorSpelEvaluator evaluator;
 
     /**
      * Intercepts methods annotated with {@link RateLimited} and enforces rate limiting.

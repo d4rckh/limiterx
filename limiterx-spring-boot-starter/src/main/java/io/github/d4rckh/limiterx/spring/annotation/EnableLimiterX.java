@@ -5,7 +5,7 @@ import io.github.d4rckh.limiterx.spring.config.RedisTemplateConfig;
 import io.github.d4rckh.limiterx.spring.extractor.IPExtractor;
 import io.github.d4rckh.limiterx.spring.extractor.NoopExtractor;
 import io.github.d4rckh.limiterx.spring.extractor.UsernameExtractor;
-import io.github.d4rckh.limiterx.spring.extractor.evaluator.KeyExtractorSpELEvaluator;
+import io.github.d4rckh.limiterx.spring.extractor.evaluator.KeyExtractorSpelEvaluator;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.ElementType;
@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
         IPExtractor.class,
         NoopExtractor.class,
         UsernameExtractor.class,
-        KeyExtractorSpELEvaluator.class
+        KeyExtractorSpelEvaluator.class
 })
 public @interface EnableLimiterX {
 }
