@@ -12,7 +12,7 @@ Include the dependency in your `pom.xml`:
 <dependency>
     <groupId>io.github.d4rckh</groupId>
     <artifactId>limiterx-spring-boot-starter</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
 </dependency>
 ```
 
